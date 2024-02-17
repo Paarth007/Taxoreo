@@ -46,7 +46,6 @@
                                 <h5>Waiting for payment update !!!</h5>
                             </div>
                         @else
-
                             @if($s->payment_detail)
                                 <?php
                                     $message=null;

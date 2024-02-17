@@ -157,6 +157,10 @@
                         <a href="{{ url('superadmin/client-service/in-progress') }}" class="nav-link"><i class="fa fa-dot-circle" aria-hidden="true"></i>In Progess</a>
                     </li>
 
+                    <li class="nav-item mt--2">
+                        <a href="{{ url('superadmin/client-service/complete') }}" class="nav-link"><i class="fa fa-dot-circle" aria-hidden="true"></i>Complete</a>
+                    </li>
+
                   </ul>
                 </div>
             </li>

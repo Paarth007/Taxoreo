@@ -24,8 +24,11 @@ class PaymentVerificationAssignUserServiceController extends Controller
 
         $user_service=DB::table('user_added_services as us')
                             ->leftJoin('master_services as ms','ms.id','us.master_service_id')
+                            ->leftJoin('users as c','c.id','us.user_id')
                             ->where('us.id',$id)
-                            ->select('us.*','ms.service_name')
+                            ->select('us.*','ms.service_name',
+                                        DB::RAW('CONCAT(c.first_name," ",c.last_name) as client_name')
+                                    )
                             ->first();
 
         $user_documents=DB::table('user_added_service_documents')
@@ -44,13 +47,21 @@ class PaymentVerificationAssignUserServiceController extends Controller
                             ->where('is_active',1)
                             ->get();
 
-        return view('Superadmin.ClientServices.SharedComponent.ClientServiceDetails')->with(['id'=>$id,
-                                                                        'url'=>$this->url,
-                                                                        'user_service'=>$user_service,
-                                                                        'user_documents'=>$user_documents,
-                                                                        'payments'=>$payments,
-                                                                        'freelancers'=>$freelancers
-                                                                    ]);
+        return view('Superadmin.ClientServices.PaymentVerificationAssignUser.Form')->with(['id'=>$id,
+                            'url'=>$this->url,
+                            'user_service'=>$user_service,
+                            'user_documents'=>$user_documents,
+                            'payments'=>$payments,
+                            'freelancers'=>$freelancers
+                        ]);
+
+        // return view('Superadmin.ClientServices.SharedComponent.ClientServiceDetails')->with(['id'=>$id,
+        //                                                                 'url'=>$this->url,
+        //                                                                 'user_service'=>$user_service,
+        //                                                                 'user_documents'=>$user_documents,
+        //                                                                 'payments'=>$payments,
+        //                                                                 'freelancers'=>$freelancers
+        //                                                             ]);
     }
 
     public function store(Request $request)

@@ -1,7 +1,6 @@
 @extends('User.Layout.Master')
 
 @section('content-header')
-
 <div class="header py-1">
     <div class="container-fluid">
         <div class="header-body ">
@@ -96,83 +95,19 @@
         </div> <!--COL-->
 
         <div class="col-md-6">
-            <div class="card card-body">
-                <div class="row m-0">
-                    <div class="col-md-4 text-right">
-                        <label class="form-control-label">
-                            Client Name :
-                        </label>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="form-group">
-                            <p class="text-bold"><b>{{$user_service->client_name}}</b></p>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="row m-0">
-                    <div class="col-md-4 text-right">
-                        <label class="form-control-label">
-                            Service Assign on :
-                        </label>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="form-group">
-                            <p class="text-bold"><b>{{date("d-M-Y",strtotime($user_service->assigned_at))}}</b></p>
-                        </div>
-                    </div>
-                </div>
-
-            </div>
+            @include('Widget.ClientDetailsWidget',['client_detail'=>$client_detail])
         </div>
     </div>
 
 
-
-    @if($id)
-            <div class="card card-body">
-                <table class="table table-border">
-                    <thead class="thead-light">
-                        <th>Sr</th>
-                        <th>Doc Name</th>
-                        <th>Action</th>
-                    </thead>
-                    <tbody>
-                        @if(count($user_documents))
-                            @foreach($user_documents as $u)
-                                <tr class="p-1">
-                                    <td class="p-1">{{$loop->iteration}}</td>
-                                    <td class="p-1">{{$u->document_name}}</td>
-                                    <td class="p-1">
-                                        @if($u->document_path)
-                                            <a href="{{ url($u->document_path) }}"
-                                                target="_blank"
-                                                class="btn btn-primary btn-sm"
-                                                >
-                                                View
-                                            </a>
-
-                                            <a href="{{ url($u->document_path) }}"
-                                                download
-                                                class="btn btn-danger btn-sm"
-                                                >
-                                                Download
-                                            </a>
-                                        @else
-                                            NOT UPLAODED
-                                        @endif
-                                    </td>
-
-                                </tr>
-                            @endforeach
-                        @endif
-                    </tbody>
-                </table>
-
-
-            </div>
-
-    @endif
+    <div class="row">
+        <div class="col-md-6">
+            @include('Widget.DocumentListWidget',['documents'=>$documents])
+        </div> <!--COL -->
+        <div class="col-md-6">
+            @include('Widget.CommentWidget',['id'=>$id,'comments'=>$comments])
+        </div> <!--COL -->
+    </div>
 @endsection
 
 @push('scripts')

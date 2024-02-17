@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\Superadmin\ClientService;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Helpers\General;
 use Datatables;
 use Session;
 use DB;
@@ -21,38 +22,22 @@ class CompleteServiceController extends Controller
 
     public function edit(Request $request,$id)
     {
-        $user_service=DB::table('user_added_services as us')
-                ->leftJoin('master_services as ms','ms.id','us.master_service_id')
-                ->leftJoin('users as c','c.id','us.user_id')
-                ->where('us.id',$id)
-                ->select('us.*','ms.service_name',
-                            DB::RAW('CONCAT(c.first_name," ",c.last_name) as client_name')
-                        )
-                ->first();
-
-        $user_documents=DB::table('user_added_service_documents')
-                ->where('user_added_service_id',$id)
-                ->get();
-
-        $payments=DB::table('user_added_service_payments as up')
-                ->leftJoin('payment_logs as p','p.id','up.payment_log_id')
-                ->where('up.user_added_service_id',$id)
-                ->select('up.*','p.easepayId as transaction_id','p.addedon')
-                ->get();
-
-        $freelancers=DB::table('users')
-                ->select('id',DB::RAW('CONCAT(first_name," ",last_name) as freelancer_name'))
-                ->whereIn('user_type',['FREELANCER','ADMIN'])
-                ->where('is_active',1)
-                ->get();
+        $user_service=General::get_user_service_details($id);
+        $client_detail=General::get_client_details($id);
+        $documents=General::get_documents($id);
+        $comments=General::get_comments($id);
+        $freelancers=General::get_freelancers($id);
+        $payment_details=General::get_user_payment_details($id);
 
         return view('Superadmin.ClientServices.SharedComponent.ClientServiceDetails')
                 ->with(['id'=>$id,
                         'url'=>$this->url,
                         'user_service'=>$user_service,
-                        'user_documents'=>$user_documents,
-                        'payments'=>$payments,
-                        'freelancers'=>$freelancers
+                        'client_detail'=>$client_detail,
+                        'documents'=>$documents,
+                        'comments'=>$comments,
+                        'freelancers'=>$freelancers,
+                        'payment_details'=>$payment_details
                     ]);
     }
 
@@ -63,10 +48,14 @@ class CompleteServiceController extends Controller
 
     public function update(Request $request, $id)
     {
-        $data['payment_type']=$request->payment_type;
+        $data['is_work_verified']=$request->is_work_verified;
+        $data['work_verified_at']=NULL;
+        if($request->is_work_verified==1){
+            $data['work_verified_at']=now();
+        }
         DB::table('user_added_services')->where('id',$id)->update($data);
 
-        $request->session()->flash('alert-success', 'Payment Details Updated !!! ');
+        $request->session()->flash('alert-success', 'Work Status Updated !!! ');
         return redirect()->back();
     }
 

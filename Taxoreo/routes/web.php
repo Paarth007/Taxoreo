@@ -36,6 +36,13 @@ Route::group(['prefix' => 'Auth', 'as' => 'Auth.'], function (){
     Route::resource('otp', 'Website\Auth\OtpController');
 });
 
+Route::group(['prefix' => 'shared', 'as' => 'shared.'], function (){
+    Route::group(['middleware' =>['SessionCheckSuperadmin','SessionCheckClient','SessionCheckUser']],function(){
+        Route::resource('comments', 'SharedControllers\CommentsController');
+    });
+});
+
+
 Route::group(['prefix' => 'superadmin', 'as' => 'superadmin.'], function (){
     Route::resource('login', 'Superadmin\Auth\AuthController');
 
