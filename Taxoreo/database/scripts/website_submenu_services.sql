@@ -1,0 +1,20 @@
+CREATE TABLE `website_submenu_services` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `website_menu_service_id` int(11) DEFAULT NULL,
+  `master_service_id` int(11) DEFAULT NULL,
+  `menu_name` varchar(225) DEFAULT NULL,
+  `page_title` varchar(225) DEFAULT NULL,
+  `redirection_url` varchar(225) DEFAULT NULL,
+  `meta_keywords` varchar(225) DEFAULT NULL,
+  `meta_description` varchar(225) DEFAULT NULL,
+  `main_content` longtext,
+  `gst_at_glance` longtext,
+  `is_published` int(1) DEFAULT '0',
+  `remark` varchar(225) DEFAULT NULL,
+  `is_active` int(1) DEFAULT '1',
+  `created_at` datetime DEFAULT NULL,
+  `updated_at` datetime DEFAULT NULL,
+  `route` varchar(225) DEFAULT NULL,
+  `file_url` varchar(225) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
