@@ -2,6 +2,7 @@
 namespace App\Http\Controllers\User\Services;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
+use App\Helpers\General;
 use Datatables;
 use Session;
 use DB;
@@ -23,23 +24,18 @@ class AssignedServicesController extends Controller
     }
 
     public function edit($id){
-        $user_service=DB::table('user_added_services as us')
-                        ->leftJoin('master_services as ms','ms.id','us.master_service_id')
-                        ->leftJoin('users as c','c.id','us.user_id')
-                        ->where('us.id',$id)
-                        ->select('us.*','ms.service_name',
-                                 DB::RAW('CONCAT(c.first_name," ",c.last_name) as client_name')
-                                )
-                        ->first();
-
-        $user_documents=DB::table('user_added_service_documents')
-                        ->where('user_added_service_id',$id)->get();
+        $user_service=General::get_user_service_details($id);
+        $client_detail=General::get_client_details($id);
+        $documents=General::get_documents($id);
+        $comments=General::get_comments($id);
 
         return view('User.Services.AssignedServices.Form')->with(['id'=>$id,
                                                             'url'=>$this->url,
                                                             'doc_url'=>$this->doc_url,
                                                             'user_service'=>$user_service,
-                                                            'user_documents'=>$user_documents
+                                                            'client_detail'=>$client_detail,
+                                                            'documents'=>$documents,
+                                                            'comments'=>$comments
                                                         ]);
     }
 

@@ -59,7 +59,7 @@ class NewlyAddedServiceController extends Controller
 
             $payment=[];
             $payment['user_added_service_id']=$id;
-            $payment['payment_type']="FINAL_PAYMENT";
+            $payment['payment_type']="BALANCE_PAYMENT";
             $payment['payable_amount']=$request->total_amount-$request->total_advance_amount;
             $payment['created_at']=NOW();
             $paymentDetails[]=$payment;
